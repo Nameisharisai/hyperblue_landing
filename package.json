@@ -1,0 +1,23 @@
+{
+  "name": "hyperblue-landing",
+  "version": "1.0.0",
+  "description": "Hyperblue Space Technology Company Landing Page",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx live-server --port=3000 --open=/index.html",
+    "dev": "npx live-server --port=3000 --open=/index.html --watch",
+    "build": "echo 'Build complete - static files ready for deployment'"
+  },
+  "keywords": [
+    "space",
+    "technology",
+    "landing-page",
+    "responsive",
+    "cinematic"
+  ],
+  "author": "Hyperblue",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

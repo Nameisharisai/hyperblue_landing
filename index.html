@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperblue - Engineering the New Era of Space</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="three-canvas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-text">HYPERBLUE</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#mission">Mission</a></li>
+                <li><a href="#rd">R&D</a></li>
+                <li><a href="#kronos">Kronos</a></li>
+                <li><a href="#nebula">Nebula 1</a></li>
+                <li><a href="#hypercluster">Hypercluster</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <canvas id="hero-canvas" class="hero-canvas"></canvas>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Engineering the New Era of Space</h1>
+            <p class="hero-subtitle">Kronos Propulsion · Nebula 1 Launch Systems · Hypercluster Constellation</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary">Explore R&D</button>
+                <button class="btn btn-secondary">Our Vision</button>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="mission" class="section mission">
+        <div class="section-bg">
+            <div class="star-field star-field-1"></div>
+        </div>
+        <div class="container">
+            <h2 class="section-title">Our Mission</h2>
+            <div class="mission-content">
+                <div class="mission-text">
+                    <p class="mission-statement">"Hyperblue was founded to redefine access to space through intelligent design, reusable propulsion, and affordable global connectivity. We're building the foundation for sovereign space infrastructure, from autonomous rockets to orbital AI-powered mesh systems."</p>
+                </div>
+                <div class="mission-visual">
+                    <canvas id="earth-canvas" class="earth-canvas"></canvas>
+                    <div class="earth-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research & Development Section -->
+    <section id="rd" class="section rd">
+        <div class="container">
+            <h2 class="section-title">Advanced Space R&D</h2>
+            <div class="rd-content">
+                <div class="rd-text">
+                    <p>"Currently in deep research phase, Hyperblue is designing a multi-layered ecosystem for space: from reusable propulsion (Kronos), to intelligent orbital mesh (Hypercluster), to scalable launch infrastructure (Nebula 1). Our simulation-first design process is supported by AI, heat-flow mechanics, and orbital autonomy."</p>
+                </div>
+                <div class="rd-visuals">
+                    <div class="blueprint-container">
+                        <div class="blueprint blueprint-1"></div>
+                        <div class="blueprint blueprint-2"></div>
+                        <div class="heatmap"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kronos Engine Section -->
+    <section id="kronos" class="section kronos">
+        <div class="container">
+            <h2 class="section-title">Kronos — Heat Into Power</h2>
+            <div class="kronos-content">
+                <div class="kronos-text">
+                    <p>"Kronos is an experimental rocket engine utilizing AHCE (Advanced Heat Channeling Engine) to survive thermal loads above 3700°C. It is designed for reusability, vertical recovery, and optimized thrust efficiency for orbital-class missions."</p>
+                    <div class="specs">
+                        <h3>Key Specifications <span class="dev-tag">In Development</span></h3>
+                        <ul>
+                            <li><strong>Thrust Target:</strong> 845 kN</li>
+                            <li><strong>Propellant:</strong> RP-1 / LOX</li>
+                            <li><strong>Cooling:</strong> Regenerative + AHCE</li>
+                            <li><strong>Phase:</strong> R&D + Simulation</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="kronos-visual">
+                    <canvas id="engine-canvas" class="engine-canvas"></canvas>
+                    <div class="engine-overlay">
+                        <div class="engine-data engine-data-1">
+                            <div class="data-label">Thrust Efficiency</div>
+                            <div class="data-value">97.8%</div>
+                        </div>
+                        <div class="engine-data engine-data-2">
+                            <div class="data-label">Heat Distribution</div>
+                            <div class="data-value">Optimal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nebula 1 Section -->
+    <section id="nebula" class="section nebula">
+        <div class="container">
+            <h2 class="section-title">Nebula 1 — Built to Return</h2>
+            <div class="nebula-content">
+                <div class="nebula-text">
+                    <p>"Nebula 1 is our launch vehicle designed to carry payloads into low Earth orbit and autonomously return. It is modular, powered by multiple Kronos engines, and aimed for first-stage reusability."</p>
+                    <div class="specs">
+                        <h3>Key Specifications <span class="dev-tag">In Development</span></h3>
+                        <ul>
+                            <li><strong>Height:</strong> 70 meters</li>
+                            <li><strong>Target Payload to LEO:</strong> 22,000 kg</li>
+                            <li><strong>First-stage Engines:</strong> 9x Kronos</li>
+                            <li><strong>Recovery:</strong> Autonomous vertical landing</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nebula-visual">
+                    <canvas id="rocket-canvas" class="rocket-canvas"></canvas>
+                    <div class="rocket-stages-overlay">
+                        <div class="stage-indicator stage-indicator-1">
+                            <span class="indicator-dot"></span>
+                            <span class="indicator-label">First Stage</span>
+                        </div>
+                        <div class="stage-indicator stage-indicator-2">
+                            <span class="indicator-dot"></span>
+                            <span class="indicator-label">Second Stage</span>
+                        </div>
+                        <div class="stage-indicator stage-indicator-3">
+                            <span class="indicator-dot"></span>
+                            <span class="indicator-label">Payload Fairing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hypercluster Section -->
+    <section id="hypercluster" class="section hypercluster">
+        <div class="container">
+            <h2 class="section-title">Hypercluster — Orbital Autonomy</h2>
+            <div class="hypercluster-content">
+                <div class="hypercluster-text">
+                    <p>"Hypercluster is a decentralized, AI-powered LEO satellite mesh designed for defense-grade communication, encrypted civilian connectivity, and geospatial insights. With laser-RF dual communication and edge routing intelligence, it aims to become the backbone of orbital infrastructure."</p>
+                    <div class="features">
+                        <h3>Features <span class="dev-tag">In Design</span></h3>
+                        <ul>
+                            <li><strong>500+ planned LEO satellites</strong></li>
+                            <li><strong>Autonomous traffic rerouting</strong></li>
+                            <li><strong>Edge AI + laser interlinks</strong></li>
+                            <li><strong>Use cases:</strong> Defense, agriculture, disaster resilience</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="hypercluster-visual">
+                    <canvas id="satellite-canvas" class="satellite-canvas"></canvas>
+                    <div class="satellite-data-overlay">
+                        <div class="data-link data-link-1"></div>
+                        <div class="data-link data-link-2"></div>
+                        <div class="data-link data-link-3"></div>
+                        <div class="data-point data-point-1">
+                            <span class="data-label">Global Coverage</span>
+                        </div>
+                        <div class="data-point data-point-2">
+                            <span class="data-label">Latency: 12ms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title">Get in Orbit With Us</h2>
+            <div class="contact-content">
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="5" placeholder="Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <nav class="footer-nav">
+                <a href="#mission">Mission</a>
+                <a href="#kronos">Kronos</a>
+                <a href="#nebula">Nebula 1</a>
+                <a href="#hypercluster">Hypercluster</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <p class="copyright">Copyright © 2025 Hyperblue</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
