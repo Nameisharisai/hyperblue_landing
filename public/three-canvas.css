@@ -1,0 +1,194 @@
+/* Three.js Canvas Styling */
+.hero-canvas,
+.earth-canvas,
+.engine-canvas,
+.rocket-canvas,
+.satellite-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.hero-overlay,
+.earth-overlay,
+.engine-overlay,
+.rocket-overlay,
+.satellite-data-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Section visuals enhancements */
+.mission-visual,
+.kronos-visual,
+.nebula-visual,
+.hypercluster-visual {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 255, 0.15), 0 0 20px rgba(0, 140, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+    .mission-visual,
+    .kronos-visual,
+    .nebula-visual,
+    .hypercluster-visual {
+        height: 500px;
+    }
+}
+
+/* Engine data overlay */
+.engine-data {
+    position: absolute;
+    background: rgba(10, 20, 40, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(100, 180, 255, 0.3);
+    border-radius: 8px;
+    padding: 10px 15px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    z-index: 2;
+}
+
+.engine-data-1 {
+    top: 20%;
+    right: 15%;
+}
+
+.engine-data-2 {
+    top: 60%;
+    left: 15%;
+}
+
+.data-label {
+    color: rgba(100, 180, 255, 0.9);
+    margin-bottom: 5px;
+    font-size: 0.8rem;
+}
+
+.data-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Rocket stages overlay */
+.rocket-stages-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.stage-indicator {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.stage-indicator-1 {
+    bottom: 25%;
+    left: 20%;
+}
+
+.stage-indicator-2 {
+    top: 40%;
+    right: 20%;
+}
+
+.stage-indicator-3 {
+    top: 15%;
+    left: 25%;
+}
+
+.indicator-dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(100, 180, 255, 0.9);
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 10px rgba(100, 180, 255, 0.7);
+}
+
+/* Satellite data overlay */
+.satellite-data-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.data-link {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0, 255, 255, 0), rgba(0, 255, 255, 0.7), rgba(0, 255, 255, 0));
+    animation: data-pulse 2s infinite;
+}
+
+.data-link-1 {
+    top: 40%;
+    left: 20%;
+    width: 30%;
+    transform: rotate(30deg);
+}
+
+.data-link-2 {
+    top: 60%;
+    right: 25%;
+    width: 20%;
+    transform: rotate(-20deg);
+}
+
+.data-link-3 {
+    top: 30%;
+    right: 20%;
+    width: 25%;
+    transform: rotate(15deg);
+}
+
+.data-point {
+    position: absolute;
+    background: rgba(10, 20, 40, 0.7);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+    color: white;
+}
+
+.data-point-1 {
+    bottom: 20%;
+    left: 10%;
+}
+
+.data-point-2 {
+    top: 20%;
+    right: 10%;
+}
+
+@keyframes data-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+}
