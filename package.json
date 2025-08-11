@@ -4,8 +4,8 @@
   "description": "Hyperblue Space Technology Company Landing Page",
   "main": "index.html",
   "scripts": {
-    "start": "npx live-server --port=3000 --open=/index.html",
-    "dev": "npx live-server --port=3000 --open=/index.html --watch",
+    "start": "npx live-server --port=3001 --open=public/index.html",
+    "dev": "npx live-server --port=3001 --open=public/index.html --watch",
     "build": "echo 'Build complete - static files ready for deployment'"
   },
   "keywords": [

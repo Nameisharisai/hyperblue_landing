@@ -319,6 +319,9 @@ html {
     position: relative;
     height: 400px;
     width: 100%;
+    overflow: visible;
+    border-radius: 8px;
+    background: rgba(0, 20, 40, 0.2);
 }
 
 .earth-canvas {
@@ -328,6 +331,8 @@ html {
     width: 100%;
     height: 100%;
     z-index: 1;
+    opacity: 0.9;
+    transition: opacity 0.5s ease;
 }
 
 .earth-overlay {
@@ -359,6 +364,15 @@ html {
     height: 400px;
 }
 
+.rd-canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #001030, #000510);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Old blueprint styles preserved for reference but not used */
 .blueprint-container {
     position: relative;
     width: 100%;

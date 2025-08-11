@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperblue Debug Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        .debug-info { margin-bottom: 20px; }
+        pre { background: #f5f5f5; padding: 10px; overflow: auto; }
+        .canvas-container { width: 300px; height: 300px; margin-bottom: 20px; }
+        #test-canvas { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <h1>Hyperblue Debug Page</h1>
+    
+    <div class="debug-info">
+        <h2>Three.js Version</h2>
+        <pre id="three-version">Checking...</pre>
+    </div>
+
+    <div class="debug-info">
+        <h2>GLTFLoader Status</h2>
+        <pre id="gltf-status">Checking...</pre>
+    </div>
+
+    <div class="debug-info">
+        <h2>Test Canvas</h2>
+        <div class="canvas-container">
+            <canvas id="test-canvas"></canvas>
+        </div>
+    </div>
+
+    <div class="debug-info">
+        <h2>Console Output</h2>
+        <pre id="console-output">Waiting for logs...</pre>
+    </div>
+
+    <script>
+        // Override console.log to capture output
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn
+        };
+        
+        const consoleOutput = document.getElementById('console-output');
+        const logs = [];
+        
+        console.log = function(...args) {
+            originalConsole.log(...args);
+            logs.push(['log', ...args]);
+            updateConsoleOutput();
+        };
+        
+        console.error = function(...args) {
+            originalConsole.error(...args);
+            logs.push(['error', ...args]);
+            updateConsoleOutput();
+        };
+        
+        console.warn = function(...args) {
+            originalConsole.warn(...args);
+            logs.push(['warn', ...args]);
+            updateConsoleOutput();
+        };
+        
+        function updateConsoleOutput() {
+            consoleOutput.textContent = logs.map(entry => {
+                const type = entry.shift();
+                return `[${type}] ${entry.map(item => 
+                    typeof item === 'object' ? JSON.stringify(item) : item
+                ).join(' ')}`;
+            }).join('\n');
+        }
+        
+        // Check Three.js version
+        document.getElementById('three-version').textContent = 
+            THREE ? `THREE.REVISION: ${THREE.REVISION}` : 'Three.js not loaded';
+            
+        // Check GLTFLoader
+        document.getElementById('gltf-status').textContent = 
+            THREE.GLTFLoader ? 'GLTFLoader available' : 'GLTFLoader not found';
+            
+        // Create a simple scene to test Three.js
+        function createTestScene() {
+            const canvas = document.getElementById('test-canvas');
+            if (!canvas) {
+                console.error('Test canvas not found');
+                return;
+            }
+            
+            try {
+                // Create a simple scene
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                
+                const renderer = new THREE.WebGLRenderer({ 
+                    canvas: canvas,
+                    antialias: true 
+                });
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                
+                // Add a simple cube
+                const geometry = new THREE.BoxGeometry();
+                const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                const cube = new THREE.Mesh(geometry, material);
+                scene.add(cube);
+                
+                camera.position.z = 5;
+                
+                // Animation
+                function animate() {
+                    requestAnimationFrame(animate);
+                    
+                    cube.rotation.x += 0.01;
+                    cube.rotation.y += 0.01;
+                    
+                    renderer.render(scene, camera);
+                }
+                
+                animate();
+                console.log('Test scene created successfully');
+            } catch (error) {
+                console.error('Error creating test scene:', error);
+            }
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded');
+            createTestScene();
+        });
+    </script>
+</body>
+</html>

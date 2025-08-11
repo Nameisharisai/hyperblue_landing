@@ -1,29 +1,31 @@
-# Hyperblue - Space Technology Landing Page
+# Hyperblue - Space Technology Landing Page (LAN Version)
 
-A high-end, cinematic, responsive landing page for Hyperblue, a global space technology company currently in the Research & Development phase.
+A high-end, cinematic, responsive landing page for Hyperblue, a global space technology company currently in the Research & Development phase. This LAN version is optimized for local network use with reduced dependencies and enhanced local rendering.
 
 ## 🚀 Features
 
 - **Cinematic Design**: Pure black background with silver/blue accents
 - **Responsive Layout**: Optimized for all devices
-- **Smooth Animations**: Parallax scrolling, particle effects, and scroll-triggered animations
+- **Smooth Animations**: THREE.js powered 3D visualizations and animations
 - **Glassmorphism Navigation**: Modern navigation bar with blur effects
 - **Interactive Elements**: Hover effects, animated components, and form validation
-- **Performance Optimized**: Efficient animations and optimized loading
+- **Performance Optimized**: Local-friendly design with fallback options
+- **LAN Optimized**: Reduced external dependencies for better local network performance
 
 ## 🛠 Technology Stack
 
 - **HTML5**: Semantic markup and modern structure
 - **CSS3**: Advanced animations, grid/flexbox layouts, glassmorphism effects
 - **Vanilla JavaScript**: Interactive functionality and smooth animations
-- **Google Fonts**: Inter and Orbitron for modern typography
+- **THREE.js**: 3D visualization library for interactive elements
+- **Google Fonts**: Inter and Orbitron for modern typography (with local fallbacks)
 
 ## 🌟 Sections
 
 1. **Hero Section**: Engineering the New Era of Space
 2. **Mission**: Company vision and goals
-3. **R&D**: Advanced space research and development
-4. **Kronos Engine**: Heat Into Power propulsion system
+3. **R&D**: Interactive 3D data visualization of research projects
+4. **Kronos Engine**: Heat Into Power propulsion system with cooling ring animation
 5. **Nebula 1**: Built to Return launch vehicle
 6. **Hypercluster**: Orbital Autonomy satellite constellation
 7. **Contact**: Get in Orbit With Us
@@ -47,49 +49,51 @@ A high-end, cinematic, responsive landing page for Hyperblue, a global space tec
 
 1. Start the development server:
    ```bash
-   npm start
-   ```
-   or
-   ```bash
-   npm run dev
+   # Using Node.js live-server (recommended for LAN)
+   npx live-server public
    ```
 
-2. Open your browser and navigate to `http://localhost:3000`
+2. Open your browser and navigate to the URL shown in the terminal (typically `http://127.0.0.1:8080`)
+
+3. For LAN access, share the server's IP address and port with other devices on the same network
 
 ### Alternative (Simple HTTP Server)
 
 You can also serve the files using any HTTP server:
 ```bash
 # Using Python 3
-python -m http.server 3000
+python -m http.server 8080
 
 # Using Python 2
-python -m SimpleHTTPServer 3000
+python -m SimpleHTTPServer 8080
 
 # Using Node.js http-server
-npx http-server -p 3000
+npx http-server
 ```
 
-## 🎨 Design Features
+## 📄 Available Versions
 
-### Color Scheme
-- **Background**: Pure black (#000000)
-- **Primary Text**: White (#ffffff)
-- **Logo/Accents**: Silver (#c0c0c0)
-- **Highlights**: Blue (#4a9eff)
+- **lan-version.html**: Optimized for local network use with THREE.js loaded from CDN
+- **index.html**: Standard version with all features
+- **simple.html**: Ultra-lightweight version
 
-### Typography
-- **Headlines**: Orbitron (futuristic, space-themed)
-- **Body Text**: Inter (clean, modern sans-serif)
+## 🔄 Latest Updates
 
-### Animations
-- Smooth parallax scrolling
-- Scroll-triggered section reveals
-- Rotating Earth with orbital trails
-- Heat map visualizations
-- Satellite mesh formations
-- Particle systems
-- Engine fire effects
+### R&D Visualization
+- Added an interactive 3D data visualization to the R&D section
+- Features animated data nodes orbiting a central hub with connection lines
+- Includes animated data packets traveling along connections
+- Dynamic grid visualization with wave animation
+
+### Kronos Engine Improvements
+- Replaced the heat distribution box with animated cooling rings
+- Enhanced thermal visualization with pulsing animation effects
+- Improved flame animation for the engine nozzle
+
+### Responsive Enhancements
+- Optimized R&D visualization for mobile devices
+- Added graceful fallbacks for browsers without WebGL support
+- Improved rendering performance for local network use
 
 ## 📱 Responsive Design
 

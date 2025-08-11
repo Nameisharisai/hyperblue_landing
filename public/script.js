@@ -1,5 +1,8 @@
 // Three.js Implementations and Advanced Animations
 document.addEventListener('DOMContentLoaded', function() {
+    // Enable enhanced 3D models
+    window.useEnhancedModels = true;
+    
     // Mobile navigation toggle
     const navToggle = document.querySelector('.nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
@@ -33,14 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize Earth Globe
     initEarthGlobe();
     
-    // Initialize Engine Model
-    initKronosEngine();
-    
-    // Initialize Rocket Model
-    initNebula1Rocket();
-    
-    // Initialize Satellite Network
-    initHyperclusterConstellation();
+    // Initialize Engine Model (only if not using enhanced models)
+    if (!window.useEnhancedModels) {
+        initKronosEngine();
+        initNebula1Rocket();
+        initHyperclusterConstellation();
+    }
 
     // Intersection Observer for scroll animations
     const observerOptions = {
@@ -112,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
 
     // Create dynamic star field
     createStarField();
@@ -223,7 +223,7 @@ function initHeroScene() {
     scene.add(stars);
     
     // Add nebula
-    const nebulaTexture = new THREE.TextureLoader().load('https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    const nebulaTexture = new THREE.TextureLoader().load('./img/nebula_texture.jpg');
     const nebulaGeometry = new THREE.SphereGeometry(800, 32, 32);
     const nebulaMaterial = new THREE.MeshBasicMaterial({
         map: nebulaTexture,
@@ -233,30 +233,6 @@ function initHeroScene() {
     });
     const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
     scene.add(nebula);
-    
-    // Add distant planet
-    const planetGeometry = new THREE.SphereGeometry(20, 32, 32);
-    const planetMaterial = new THREE.MeshBasicMaterial({
-        color: 0x4a9eff,
-        transparent: true,
-        opacity: 0.8
-    });
-    const planet = new THREE.Mesh(planetGeometry, planetMaterial);
-    planet.position.set(-100, 50, -300);
-    scene.add(planet);
-    
-    // Add Saturn-like ring
-    const ringGeometry = new THREE.RingGeometry(25, 35, 64);
-    const ringMaterial = new THREE.MeshBasicMaterial({
-        color: 0xc0c0c0,
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.6
-    });
-    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    ring.position.copy(planet.position);
-    ring.rotation.x = Math.PI / 2;
-    scene.add(ring);
     
     // Position camera
     camera.position.z = 5;
@@ -276,9 +252,6 @@ function initHeroScene() {
         stars.rotation.z += 0.0001;
         
         nebula.rotation.y += 0.0002;
-        
-        planet.rotation.y += 0.005;
-        ring.rotation.z += 0.002;
         
         renderer.render(scene, camera);
     }
@@ -315,6 +288,120 @@ function closeNotification(notification) {
     }, 300);
 }
 
+// Earth Globe Initialization for Mission Section
+function initEarthGlobe() {
+    const canvas = document.getElementById('earth-canvas');
+    if (!canvas) return;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    
+    const renderer = new THREE.WebGLRenderer({ 
+        canvas: canvas,
+        antialias: true,
+        alpha: true 
+    });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Add Earth with textures
+    const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
+    const textureLoader = new THREE.TextureLoader();
+    
+    // Load Earth textures with error handling
+    const earthMaterial = new THREE.MeshPhongMaterial({
+        shininess: 15
+    });
+    
+    // Try to load earth textures
+    textureLoader.load('./img/earth_atmos_2048.jpg', 
+        (texture) => {
+            earthMaterial.map = texture;
+            earthMaterial.needsUpdate = true;
+        },
+        undefined,
+        (err) => {
+            console.error('Error loading earth texture, using fallback', err);
+            earthMaterial.color = new THREE.Color(0x2233aa);
+        }
+    );
+    
+    textureLoader.load('./img/earth_normal_2048.jpg', 
+        (texture) => {
+            earthMaterial.bumpMap = texture;
+            earthMaterial.bumpScale = 0.05;
+            earthMaterial.needsUpdate = true;
+        },
+        undefined,
+        (err) => console.error('Error loading normal map, continuing without it', err)
+    );
+    
+    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    scene.add(earth);
+    
+    // Add clouds layer
+    const cloudGeometry = new THREE.SphereGeometry(2.05, 32, 32);
+    const cloudMaterial = new THREE.MeshPhongMaterial({
+        map: null,
+        transparent: true,
+        opacity: 0.4
+    });
+    
+    textureLoader.load('./img/earth_clouds_2048.jpg', 
+        (texture) => {
+            cloudMaterial.map = texture;
+            cloudMaterial.needsUpdate = true;
+        },
+        undefined,
+        (err) => console.error('Error loading clouds texture, continuing without it', err)
+    );
+    
+    const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+    scene.add(clouds);
+    
+    // Add atmosphere glow
+    const glowGeometry = new THREE.SphereGeometry(2.1, 32, 32);
+    const glowMaterial = new THREE.MeshPhongMaterial({
+        color: 0x0077ff,
+        transparent: true,
+        opacity: 0.2,
+        side: THREE.BackSide
+    });
+    
+    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+    scene.add(glow);
+    
+    // Add lights
+    const ambientLight = new THREE.AmbientLight(0x555555);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 3, 5);
+    scene.add(directionalLight);
+    
+    // Position camera
+    camera.position.z = 5;
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    });
+    
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        earth.rotation.y += 0.002;
+        clouds.rotation.y += 0.0025;
+        
+        renderer.render(scene, camera);
+    }
+    
+    animate();
+}
+
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize navigation interactions
@@ -341,7 +428,12 @@ function animateSectionsOnScroll() {
             
             // Initialize 3D scenes when sections come into view
             if (section.id === 'mission') {
-                initEarthScene();
+                // No need to reinitialize since we do it on page load
+                // Just ensure it's visible
+                const earthCanvas = document.getElementById('earth-canvas');
+                if (earthCanvas) {
+                    earthCanvas.style.opacity = '1';
+                }
             } else if (section.id === 'kronos-engine') {
                 initEngineScene();
             } else if (section.id === 'nebula-1') {
@@ -1057,12 +1149,12 @@ function initKronosEngine() {
     scene.background = new THREE.Color(0x000000);
     scene.fog = new THREE.FogExp2(0x000815, 0.03);
 
-    // Camera setup
+    // Camera setup with better positioning for dramatic effect
     const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    camera.position.set(0, 0, 10);
+    camera.position.set(4, 2, 10);
     camera.lookAt(0, 0, 0);
 
-    // Renderer setup
+    // Renderer setup with enhanced settings
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         antialias: true,
@@ -1074,28 +1166,53 @@ function initKronosEngine() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
+    renderer.outputEncoding = THREE.sRGBEncoding;
 
-    // Advanced lighting
+    // Create HDR-like environment lighting for realistic metal reflections
+    const hemiLight = new THREE.HemisphereLight(0x0066ff, 0xff9900, 0.3);
+    scene.add(hemiLight);
+
+    // Advanced lighting for dramatic effect
     const ambientLight = new THREE.AmbientLight(0x111122, 0.5);
     scene.add(ambientLight);
 
-    const blueLight = new THREE.PointLight(0x0066ff, 5, 15);
-    blueLight.position.set(5, 3, 5);
+    // Primary blue light from right side
+    const blueLight = new THREE.PointLight(0x0066ff, 4, 25);
+    blueLight.position.set(7, 4, 6);
     blueLight.castShadow = true;
+    blueLight.shadow.bias = -0.001;
+    blueLight.shadow.mapSize.width = 2048;
+    blueLight.shadow.mapSize.height = 2048;
     scene.add(blueLight);
 
-    const orangeLight = new THREE.PointLight(0xff6600, 5, 15);
+    // Orange light from opposite side (simulates heat/fire)
+    const orangeLight = new THREE.PointLight(0xff6600, 4, 25);
     orangeLight.position.set(-5, -3, 5);
     orangeLight.castShadow = true;
+    orangeLight.shadow.bias = -0.001;
+    orangeLight.shadow.mapSize.width = 2048;
+    orangeLight.shadow.mapSize.height = 2048;
     scene.add(orangeLight);
+
+    // Small rim light to highlight engine edges
+    const rimLight = new THREE.PointLight(0xffffcc, 2, 20);
+    rimLight.position.set(0, 8, -8);
+    scene.add(rimLight);
 
     // Create engine group
     const engineGroup = new THREE.Group();
     scene.add(engineGroup);
 
-    // Advanced materials
-    const metalMaterial = new THREE.MeshStandardMaterial({
-        color: 0x333333,
+    // Advanced physically-based materials
+    const titaniumMaterial = new THREE.MeshStandardMaterial({
+        color: 0x8c8c8c,
+        metalness: 0.9,
+        roughness: 0.3,
+        envMapIntensity: 1.0
+    });
+
+    const copperMaterial = new THREE.MeshStandardMaterial({
+        color: 0xca6533,
         metalness: 0.9,
         roughness: 0.2,
         envMapIntensity: 1.0
@@ -1109,95 +1226,201 @@ function initKronosEngine() {
         roughness: 0.4
     });
 
-    const glassyMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x223366,
+    const coolantMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x00aaff,
         metalness: 0.9,
         roughness: 0.05,
         transparent: true,
         opacity: 0.6,
         envMapIntensity: 1.0,
         clearcoat: 1.0,
-        clearcoatRoughness: 0.1
+        clearcoatRoughness: 0.1,
+        transmission: 0.5
     });
 
-    // Main engine body
-    const engineBodyGeo = new THREE.CylinderGeometry(1.5, 2, 6, 64);
-    const engineBody = new THREE.Mesh(engineBodyGeo, metalMaterial);
-    engineBody.castShadow = true;
-    engineBody.receiveShadow = true;
-    engineGroup.add(engineBody);
+    const carbonFiberMaterial = new THREE.MeshStandardMaterial({
+        color: 0x111111,
+        metalness: 0.1,
+        roughness: 0.8
+    });
 
-    // Engine nozzle
-    const nozzleGeo = new THREE.CylinderGeometry(2, 0.8, 3, 64, 8, true);
-    const nozzle = new THREE.Mesh(nozzleGeo, metalMaterial);
-    nozzle.position.y = -4.5;
+    // Create nozzle bell geometry with more detail
+    const createNozzleBell = () => {
+        const points = [];
+        // Create a more realistic bell curve
+        for (let i = 0; i <= 20; i++) {
+            const t = i / 20;
+            const x = 2 * Math.pow(Math.sin(t * Math.PI * 0.6), 0.5);
+            const y = -t * 4;
+            points.push(new THREE.Vector2(x, y));
+        }
+        const bellGeo = new THREE.LatheGeometry(points, 64);
+        return bellGeo;
+    };
+
+    // Main combustion chamber
+    const chamberGeo = new THREE.CylinderGeometry(1.5, 1.8, 3, 64, 4);
+    const chamber = new THREE.Mesh(chamberGeo, titaniumMaterial);
+    chamber.castShadow = true;
+    chamber.receiveShadow = true;
+    chamber.position.y = 1;
+    engineGroup.add(chamber);
+
+    // Upper fuel delivery system
+    const upperSystemGeo = new THREE.CylinderGeometry(1.2, 1.5, 1.5, 64);
+    const upperSystem = new THREE.Mesh(upperSystemGeo, titaniumMaterial);
+    upperSystem.castShadow = true;
+    upperSystem.receiveShadow = true;
+    upperSystem.position.y = 3.25;
+    engineGroup.add(upperSystem);
+
+    // Fuel injector plate
+    const injectorPlateGeo = new THREE.CylinderGeometry(1.2, 1.2, 0.2, 64);
+    const injectorPlate = new THREE.Mesh(injectorPlateGeo, copperMaterial);
+    injectorPlate.position.y = 2.4;
+    engineGroup.add(injectorPlate);
+
+    // Engine nozzle with realistic bell shape
+    const nozzleBellGeo = createNozzleBell();
+    const nozzle = new THREE.Mesh(nozzleBellGeo, titaniumMaterial);
+    nozzle.position.y = -1.5;
     nozzle.castShadow = true;
     nozzle.receiveShadow = true;
     engineGroup.add(nozzle);
 
-    // Advanced cooling system
-    const coolingRingGeo = new THREE.TorusGeometry(1.6, 0.08, 16, 100);
+    // Detailed cooling tubes wrapping around the nozzle
+    const createCoolingTubes = () => {
+        const tubeGroup = new THREE.Group();
+        const tubeCount = 36;
+        const tubeRadius = 0.06;
+        
+        for (let i = 0; i < tubeCount; i++) {
+            const angle = (i / tubeCount) * Math.PI * 2;
+            const tubeGeometry = new THREE.TorusGeometry(1.83, tubeRadius, 8, 48, Math.PI * 1.6);
+            const tube = new THREE.Mesh(tubeGeometry, copperMaterial);
+            tube.position.y = -1.5;
+            tube.rotation.y = angle;
+            tube.rotation.x = Math.PI / 2;
+            tubeGroup.add(tube);
+        }
+        
+        return tubeGroup;
+    };
     
-    for (let i = 0; i < 12; i++) {
-        const coolingRing = new THREE.Mesh(coolingRingGeo, glowBlueMaterial);
-        coolingRing.rotation.x = Math.PI / 2;
-        coolingRing.position.y = -1.5 + (i * 0.4);
-        coolingRing.scale.y = 1 + (i % 2) * 0.1;
-        engineGroup.add(coolingRing);
-    }
+    const coolingTubes = createCoolingTubes();
+    engineGroup.add(coolingTubes);
 
-    // AI Control Systems
-    // Central AI core
-    const aiCoreGeo = new THREE.SphereGeometry(0.4, 32, 32);
-    const aiCore = new THREE.Mesh(aiCoreGeo, glassyMaterial);
-    aiCore.position.y = 3.5;
-    engineGroup.add(aiCore);
-
-    // AI circuit patterns
-    const circuitGeo = new THREE.CylinderGeometry(1.51, 2.01, 6.01, 64);
+    // AI Control Systems and detail components
+    // Advanced cooling manifold
+    const manifoldGroup = new THREE.Group();
     
-    // Load circuit texture
-    const textureLoader = new THREE.TextureLoader();
-    const circuitTexture = textureLoader.load('https://i.imgur.com/LVJHqGF.jpg');
-    circuitTexture.wrapS = THREE.RepeatWrapping;
-    circuitTexture.wrapT = THREE.RepeatWrapping;
-    circuitTexture.repeat.set(4, 4);
+    // Main manifold ring
+    const manifoldRingGeo = new THREE.TorusGeometry(1.7, 0.15, 16, 48);
+    const manifoldRing = new THREE.Mesh(manifoldRingGeo, copperMaterial);
+    manifoldRing.rotation.x = Math.PI / 2;
+    manifoldRing.position.y = 0;
+    manifoldGroup.add(manifoldRing);
     
-    const circuitMaterial = new THREE.MeshStandardMaterial({
-        map: circuitTexture,
-        emissive: 0x0055aa,
-        emissiveIntensity: 0.5,
-        transparent: true,
-        opacity: 0.7
-    });
-    
-    const circuitPattern = new THREE.Mesh(circuitGeo, circuitMaterial);
-    engineGroup.add(circuitPattern);
-
-    // Control modules
-    const moduleGeo = new THREE.BoxGeometry(0.3, 0.2, 0.6);
-    
+    // Cooling pipes connected to manifold
     for (let i = 0; i < 8; i++) {
         const angle = (i / 8) * Math.PI * 2;
-        const module = new THREE.Mesh(moduleGeo, metalMaterial);
-        module.position.set(
-            Math.cos(angle) * 1.6,
-            2.5,
-            Math.sin(angle) * 1.6
+        const pipeGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.8, 8);
+        const pipe = new THREE.Mesh(pipeGeo, copperMaterial);
+        
+        pipe.position.set(
+            Math.cos(angle) * 1.7,
+            0,
+            Math.sin(angle) * 1.7
         );
-        module.rotation.y = angle;
+        pipe.rotation.z = Math.PI / 2;
+        pipe.rotation.y = -angle;
+        manifoldGroup.add(pipe);
         
-        // Add glow LED
-        const ledGeo = new THREE.SphereGeometry(0.04, 8, 8);
-        const ledMaterial = new THREE.MeshBasicMaterial({
-            color: i % 3 === 0 ? 0xff0000 : i % 3 === 1 ? 0x00ff00 : 0x0088ff
-        });
-        const led = new THREE.Mesh(ledGeo, ledMaterial);
-        led.position.set(0, 0.15, 0.25);
-        module.add(led);
-        
-        engineGroup.add(module);
+        // Valve on each pipe
+        const valveGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.2, 16);
+        const valve = new THREE.Mesh(valveGeo, titaniumMaterial);
+        valve.position.set(
+            Math.cos(angle) * 1.7 + Math.cos(angle) * 0.4,
+            0,
+            Math.sin(angle) * 1.7 + Math.sin(angle) * 0.4
+        );
+        valve.rotation.z = Math.PI / 2;
+        valve.rotation.y = -angle;
+        manifoldGroup.add(valve);
     }
+    
+    engineGroup.add(manifoldGroup);
+    
+    // Fuel turbopump assembly
+    const pumpGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.8, 32);
+    const pump = new THREE.Mesh(pumpGeo, titaniumMaterial);
+    pump.position.set(1.5, 0.5, 0);
+    engineGroup.add(pump);
+    
+    // Turbopump detail - shaft
+    const shaftGeo = new THREE.CylinderGeometry(0.1, 0.1, 1.2, 16);
+    const shaft = new THREE.Mesh(shaftGeo, titaniumMaterial);
+    shaft.position.set(1.5, 0.5, 0);
+    shaft.rotation.z = Math.PI / 2;
+    engineGroup.add(shaft);
+    
+    // Turbopump detail - impeller
+    const impellerGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.2, 32);
+    const impeller = new THREE.Mesh(impellerGeo, copperMaterial);
+    impeller.position.set(2.1, 0.5, 0);
+    impeller.rotation.z = Math.PI / 2;
+    engineGroup.add(impeller);
+    
+    // LOX turbopump assembly
+    const loxPumpGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.7, 32);
+    const loxPump = new THREE.Mesh(loxPumpGeo, titaniumMaterial);
+    loxPump.position.set(-1.5, 1.0, 0);
+    engineGroup.add(loxPump);
+    
+    // LOX flow pipes
+    const createBentPipe = (startPoint, midPoint, endPoint, radius) => {
+        const curve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(...startPoint),
+            new THREE.Vector3(...midPoint),
+            new THREE.Vector3(...endPoint)
+        ]);
+        
+        const geometry = new THREE.TubeGeometry(curve, 32, radius, 16, false);
+        return geometry;
+    };
+    
+    // Main fuel pipe
+    const fuelPipeGeo = createBentPipe(
+        [1.5, 0.5, 0], // Start at fuel pump
+        [1.0, 1.5, 0.5], // Mid point
+        [0, 2.4, 0], // End at injector plate
+        0.08
+    );
+    const fuelPipe = new THREE.Mesh(fuelPipeGeo, copperMaterial);
+    engineGroup.add(fuelPipe);
+    
+    // Main LOX pipe
+    const loxPipeGeo = createBentPipe(
+        [-1.5, 1.0, 0], // Start at LOX pump
+        [-0.8, 1.8, -0.4], // Mid point
+        [0, 2.4, 0], // End at injector plate
+        0.08
+    );
+    const loxPipe = new THREE.Mesh(loxPipeGeo, copperMaterial);
+    engineGroup.add(loxPipe);
+
+    // Advanced AI control module
+    const aiCoreGeo = new THREE.SphereGeometry(0.4, 32, 32);
+    const aiCore = new THREE.Mesh(aiCoreGeo, coolantMaterial);
+    aiCore.position.y = 4.0;
+    engineGroup.add(aiCore);
+    
+    // AI cooling system
+    const aiCoolingRingGeo = new THREE.TorusGeometry(0.5, 0.05, 16, 48);
+    const aiCoolingRing = new THREE.Mesh(aiCoolingRingGeo, copperMaterial);
+    aiCoolingRing.rotation.x = Math.PI / 2;
+    aiCoolingRing.position.y = 4.0;
+    engineGroup.add(aiCoolingRing);
 
     // Engine flame effect
     const flameGroup = new THREE.Group();
@@ -1801,10 +2024,33 @@ function initHyperclusterConstellation() {
     const earthGeo = new THREE.SphereGeometry(10, 64, 64);
     const textureLoader = new THREE.TextureLoader();
     
-    const earthTexture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
-    const earthBumpMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_normal_2048.jpg');
-    const earthSpecMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_specular_2048.jpg');
-    const cloudsTexture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_clouds_2048.jpg');
+    // Add error handling to texture loading
+    textureLoader.setCrossOrigin('anonymous');
+    
+    // Load textures with error handling
+    const earthTexture = textureLoader.load('./img/earth_atmos_2048.jpg', 
+        texture => console.log('Earth texture loaded'), 
+        undefined, 
+        err => console.error('Error loading earth texture:', err)
+    );
+    
+    const earthBumpMap = textureLoader.load('./img/earth_normal_2048.jpg', 
+        texture => console.log('Earth normal map loaded'),
+        undefined, 
+        err => console.error('Error loading normal map:', err)
+    );
+    
+    const earthSpecMap = textureLoader.load('./img/earth_specular_2048.jpg', 
+        texture => console.log('Earth specular map loaded'),
+        undefined, 
+        err => console.error('Error loading specular map:', err)
+    );
+    
+    const cloudsTexture = textureLoader.load('./img/earth_clouds_2048.jpg',
+        texture => console.log('Clouds texture loaded'),
+        undefined, 
+        err => console.error('Error loading clouds texture:', err)
+    );
     
     const earthMaterial = new THREE.MeshPhongMaterial({
         map: earthTexture,
